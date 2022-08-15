@@ -154,16 +154,21 @@ main {
 }
 
 .search_section > form {
-  padding: 16px;
   width: 100%;
-  display: grid;
-  grid-template-columns: auto 1fr 0.5fr;
-  grid-gap: 10px;
+  display: block;
+}
+.search_section > form > * {
+  width: 100%;
+}
+.search_section > form > * + button {
+  margin-top: 16px;
 }
 
 .search_section > form > label {
   display: flex;
   align-items: center;
+  margin-top: 8px;
+  font-weight: bold;
 }
 
 .search_section > form > input {

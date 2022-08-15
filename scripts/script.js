@@ -17,6 +17,7 @@ const inIsComplete = document.getElementById("inputBookIsComplete");
 const bookSubmit = document.getElementById("inputBook");
 // Search book
 const inSearchTitle = document.getElementById("searchBookTitle");
+const inSearchAuthor = document.getElementById("searchBookAuthor");
 const searchSubmit = document.getElementById("searchBook");
 // Book list
 const unreadContainer = document.getElementById("incompleteBookshelfList");
@@ -68,11 +69,16 @@ const filterByProgress = (list, progress) => {
   });
   return result;
 };
-const filterByTitle = (list, title) => {
+const filterBook = (list, title, author) => {
   const result = [];
   list.forEach((book) => {
-    const bookTitle = book.title;
-    if (bookTitle.includes(title)) result.push(book);
+    const bookTitle = book.title.toLowerCase();
+    const bookAuthor = book.author.toLowerCase();
+    if (
+      bookAuthor.includes(author.toLowerCase()) &&
+      bookTitle.includes(title.toLowerCase())
+    )
+      result.push(book);
   });
   return result;
 };
@@ -126,8 +132,10 @@ const eventDelBook = (list, id) => {
 };
 
 const eventSearchBook = (list) => {
-  const query = inSearchTitle.value;
-  const newList = filterByTitle(list, query);
+  const title = inSearchTitle.value;
+  const author = inSearchAuthor.value;
+  // const newList = filterByTitle(list, title);
+  const newList = filterBook(list, title, author);
   renderAllList(newList);
 };
 
