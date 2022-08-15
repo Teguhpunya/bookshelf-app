@@ -177,7 +177,6 @@ const renderList = (list, parentElement) => {
 };
 
 const renderAllList = (list) => {
-  // listBooks = parseList(KEY_LISTBOOK);
   listUnreadBooks = filterByProgress(list, !COMPLETED);
   listReadBooks = filterByProgress(list, COMPLETED);
 
