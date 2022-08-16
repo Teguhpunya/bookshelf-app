@@ -190,8 +190,12 @@ const templateBookItem = (book) => {
   Render
 */
 const renderList = (list, parentElement) => {
-  parentElement.innerHTML = "";
-  if (list) {
+  parentElement.innerHTML = `
+    <div>Kosong</div>
+  `;
+
+  if (list.length != 0) {
+    parentElement.innerHTML = "";
     list.forEach((book) => {
       parentElement.append(templateBookItem(book));
     });
