@@ -1,14 +1,20 @@
-/* Constants */
+/*
+  Constants
+*/
 const KEY_LISTBOOK = "LIST_BOOK";
 const DIALOG_DELETE = "Yakin ingin menghapus buku ini?";
 const COMPLETED = true;
 
-/* Variables */
+/*
+  Variables
+*/
 let listBooks;
 let listUnreadBooks;
 let listReadBooks;
 
-/* Elements */
+/* 
+  Elements
+*/
 // New book
 const inTitle = document.getElementById("inputBookTitle");
 const inAuthor = document.getElementById("inputBookAuthor");
@@ -25,7 +31,9 @@ const readContainer = document.getElementById("completeBookshelfList");
 // Buttons
 const btnBookSubmit = document.getElementById("bookSubmit");
 
-/* Classes */
+/*
+  Classes
+*/
 class Book {
   constructor(id, title, author, year, isComplete) {
     this.id = id;
@@ -36,7 +44,9 @@ class Book {
   }
 }
 
-/* Functions/Methods */
+/*
+  Functions/Methods
+*/
 // Form
 const resetForm = () => {
   inSearchTitle.value = "";
@@ -139,7 +149,9 @@ const eventSearchBook = (list) => {
   renderAllList(newList);
 };
 
-/* Templates */
+/*
+  Templates
+*/
 const templateBookItem = (book) => {
   const { id, title, author, year, isComplete } = book;
   const newArticle = document.createElement("article");
@@ -174,7 +186,9 @@ const templateBookItem = (book) => {
   return newArticle;
 };
 
-/* Render */
+/*
+  Render
+*/
 const renderList = (list, parentElement) => {
   parentElement.innerHTML = "";
   if (list) {
@@ -192,7 +206,9 @@ const renderAllList = (list) => {
   renderList(listReadBooks, readContainer);
 };
 
-/* Main script*/
+/*
+  Main script
+*/
 listBooks = parseList(KEY_LISTBOOK);
 
 // Fetch lists
