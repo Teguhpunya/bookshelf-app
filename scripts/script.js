@@ -3,6 +3,8 @@
 */
 const KEY_LISTBOOK = "LIST_BOOK";
 const DIALOG_DELETE = "Yakin ingin menghapus buku ini?";
+const DIALOG_EDIT_SUCCESS = "Data telah diperbaharui";
+
 const COMPLETED = true;
 
 /*
@@ -30,6 +32,8 @@ const unreadContainer = document.getElementById("incompleteBookshelfList");
 const readContainer = document.getElementById("completeBookshelfList");
 // Buttons
 const btnBookSubmit = document.getElementById("bookSubmit");
+// Containers
+const containerFixed = document.getElementById("container-fixed");
 
 /*
   Classes
@@ -40,7 +44,7 @@ class Book {
     this.title = title;
     this.author = author;
     this.year = year;
-    this.isComplete = isComplete | false;
+    this.isComplete = isComplete;
   }
 }
 
@@ -111,6 +115,12 @@ const delBook = (list, id) => {
   result.splice(index, 1);
   return result;
 };
+const editBook = (list, id, editedBook) => {
+  const result = list;
+  const index = result.map((item) => item.id).indexOf(id);
+  result[index] = editedBook;
+  return result;
+};
 
 // Events
 const eventAddBook = (list) => {
@@ -124,12 +134,15 @@ const eventAddBook = (list) => {
   const newBook = new Book(id, title, author, year, isComplete);
   const newList = addBook(list, newBook);
   setList(KEY_LISTBOOK, newList);
+  alert("Berhasil ditambahkan!");
   renderAllList(newList);
+  window.scrollTo({ top: unreadContainer.offsetTop });
 };
 
 const eventProgressBook = (list, id) => {
   const newList = toggleProgressBook(list, id);
   setList(KEY_LISTBOOK, newList);
+  alert("Berhasil dipindahkan!");
   renderAllList(newList);
 };
 
@@ -138,6 +151,7 @@ const eventDelBook = (list, id) => {
 
   const newList = delBook(list, id);
   setList(KEY_LISTBOOK, newList);
+  alert("Berhasil dihapus!");
   renderAllList(newList);
 };
 
@@ -147,6 +161,28 @@ const eventSearchBook = (list) => {
   // const newList = filterByTitle(list, title);
   const newList = filterBook(list, title, author);
   renderAllList(newList);
+  window.scrollTo({ top: unreadContainer.offsetTop });
+};
+
+const eventSubmitEditedBook = (list, id, container) => {
+  const newTitle = container.querySelector("#editBookTitle").value;
+  const newAuthor = container.querySelector("#editBookAuthor").value;
+  const newYear = container.querySelector("#editBookYear").value;
+  const newProgress = container.querySelector("#editBookIsComplete").checked;
+
+  const newBook = new Book(id, newTitle, newAuthor, newYear, newProgress);
+
+  const newList = editBook(list, id, newBook);
+
+  setList(KEY_LISTBOOK, newList);
+  alert(DIALOG_EDIT_SUCCESS);
+  eventCloseContainer(container);
+  renderAllList(newList);
+  window.scrollTo({ top: unreadContainer.offsetTop });
+};
+
+const eventCloseContainer = (container) => {
+  container.style.display = "none";
 };
 
 /*
@@ -167,6 +203,12 @@ const templateBookItem = (book) => {
   const newAction = document.createElement("div");
   newAction.className = "action";
 
+  // Edit button
+  const btnEdit = document.createElement("button");
+  // btnEdit.className = "green";
+  btnEdit.innerText = "Ubah data";
+  btnEdit.onclick = () => displayEditBook(listBooks, book, containerFixed);
+
   // Progress button
   const btnProg = document.createElement("button");
   btnProg.className = "green";
@@ -180,12 +222,41 @@ const templateBookItem = (book) => {
   btnDel.onclick = () => eventDelBook(listBooks, id);
 
   // Append all to article
-  newAction.append(btnProg, btnDel);
+  newAction.append(btnProg, btnEdit, btnDel);
   newArticle.append(newAction);
 
   return newArticle;
 };
 
+const templateEditBook = (book) => {
+  const { id, title, author, year, isComplete } = book;
+  console.log(isComplete);
+  return `
+    <section class="input_section flex-column card">
+      <h2>Edit buku ${title}</h2>
+      <form id="form-editBook">
+        <div class="input">
+          <label for="editBookTitle">Judul</label>
+          <input id="editBookTitle" type="text" value="${title}" required />
+        </div>
+        <div class="input">
+          <label for="editBookAuthor">Penulis</label>
+          <input id="editBookAuthor" type="text" value="${author}" required />
+        </div>
+        <div class="input">
+          <label for="editBookYear">Tahun</label>
+          <input id="editBookYear" type="number" value="${year}" required />
+        </div>
+        <div class="input_inline">
+          <label for="editBookIsComplete">Selesai dibaca</label>
+          <input id="editBookIsComplete" type="checkbox"/>
+        </div>
+        <button id="editSubmit" type="submit">Selesai</button>
+      </form>
+      <button class="red" id="editCancelSubmit">Batal</button>
+    </section>
+  `;
+};
 /*
   Render
 */
@@ -208,6 +279,26 @@ const renderAllList = (list) => {
 
   renderList(listUnreadBooks, unreadContainer);
   renderList(listReadBooks, readContainer);
+};
+
+const displayEditBook = (list, book, container) => {
+  const id = book.id;
+
+  container.innerHTML = templateEditBook(book);
+  const submit = container.querySelector("#form-editBook");
+  const btnCancel = container.querySelector("#editCancelSubmit");
+  const checkbox = container.querySelector("#editBookIsComplete");
+  checkbox.checked = book.isComplete;
+
+  submit.onsubmit = (event) => {
+    eventSubmitEditedBook(list, id, container);
+    event.preventDefault();
+  };
+  btnCancel.onclick = () => {
+    alert("Edit buku dibatalkan");
+    eventCloseContainer(container);
+  };
+  container.style.display = "block";
 };
 
 /*

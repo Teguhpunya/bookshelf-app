@@ -147,6 +147,7 @@ input {
 .book_shelf > h2 {
   font-size: 1.5em;
   font-family: "Indie Flower";
+  text-align: center;
 }
 
 main {
@@ -174,6 +175,11 @@ main {
 
 .input_section {
   padding: 16px;
+}
+
+.input_section > * + *,
+.input_section > form > * + * {
+  margin-top: 8px;
 }
 
 .input_section > form > .input {
@@ -285,4 +291,23 @@ footer > a {
   padding: 0 4px;
   cursor: pointer;
   border-radius: 4px;
+}
+
+#container-fixed {
+  background-color: #272623ee;
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+#container-fixed > .input_section {
+  background-color: var(--color-surface);
+  /* height: 100%; */
+  margin: 5%;
+  padding: 5em;
+  justify-content: center;
+  box-shadow: 0 0 16px 2px var(--color-primary);
 }
